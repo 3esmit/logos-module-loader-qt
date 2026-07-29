@@ -7,6 +7,8 @@
 #include "logos_api_provider.h"
 #include "logos_transport_config.h"
 #include "logos_transport_config_json.h"
+#include <logos_container/module_descriptor.h>
+#include "module_instance_id.h"
 #include "token_manager.h"
 #include "module_lib.h"
 
@@ -48,31 +50,43 @@ LogosAPI* initializeLogosAPI(const std::string& moduleName, QObject* module,
                               PluginInterface* basePlugin, const std::string& authToken,
                               const std::string& modulePath,
                               const std::string& instancePersistencePath,
+                              const std::string& instanceId,
                               const std::string& transportSetJson)
 {
+    const std::string runtimeInstanceId = LogosCore::resolveRuntimeInstanceId(
+        instanceId, instancePersistencePath);
+    const LogosCore::ModuleAddress address{moduleName, runtimeInstanceId};
+    if (!address.isValid()) {
+        spdlog::critical("Refusing module with invalid runtime address: {}", moduleName);
+        return nullptr;
+    }
+
     // If the daemon passed a transport set for this module, deserialize
     // and use the explicit-transport LogosAPI constructor so the
     // module's LogosAPIProvider binds every listener (LocalSocket +
-    // any TCP / TCP+SSL endpoints). Otherwise fall back to the
-    // single-arg constructor → global default (LocalSocket only),
-    // matching the long-standing behaviour for modules the daemon
-    // hasn't explicitly configured.
+    // any TCP / TCP+SSL endpoints). Otherwise use the explicit empty
+    // transport set, which preserves the global-default LocalSocket behavior
+    // for modules the daemon has not configured.
     LogosAPI* logos_api = nullptr;
     if (!transportSetJson.empty()) {
         LogosTransportSet set =
             logos::transportSetFromJsonString(transportSetJson);
         logos_api = new LogosAPI(QString::fromStdString(moduleName),
+                                  QString::fromStdString(runtimeInstanceId),
                                   std::move(set), module);
     } else {
-        logos_api = new LogosAPI(moduleName, module);
+        logos_api = new LogosAPI(QString::fromStdString(moduleName),
+                                  QString::fromStdString(runtimeInstanceId),
+                                  LogosTransportSet{}, module);
     }
     logos_api->setProperty("modulePath",
         fs::absolute(fs::path(modulePath)).parent_path().string());
 
     if (!instancePersistencePath.empty()) {
         logos_api->setProperty("instancePersistencePath", instancePersistencePath);
-        logos_api->setProperty("instanceId",
-            fs::path(instancePersistencePath).filename().string());
+    }
+    if (!runtimeInstanceId.empty()) {
+        logos_api->setProperty("instanceId", runtimeInstanceId);
     }
 
     // Surface the token as a QObject property BEFORE registerObject:

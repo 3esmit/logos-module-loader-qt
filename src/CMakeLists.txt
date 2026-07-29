@@ -67,6 +67,7 @@ set(LOGOS_HOST_SOURCES
     host/logos_host.cpp
     host/command_line_parser.cpp
     host/command_line_parser.h
+    host/module_instance_id.h
     host/module_initializer.cpp
     host/module_initializer.h
     host/token_source.cpp
@@ -78,12 +79,14 @@ set(LOGOS_HOST_SOURCES
 add_executable(logos_host_qt ${LOGOS_HOST_SOURCES})
 
 # The host reads its auth token from an OS handle (TokenSource, default stdin)
-# named by --token-source, so it depends on NO container package.
+# named by --token-source. It also consumes the container address contract to
+# validate the runtime identity before binding an endpoint.
 target_link_libraries(logos_host_qt PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::RemoteObjects
     logos_sdk
+    logos_container
     logos_module
     CLI11::CLI11
     spdlog::spdlog

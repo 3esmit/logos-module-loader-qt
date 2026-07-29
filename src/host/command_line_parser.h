@@ -7,6 +7,7 @@ struct ModuleArgs {
     std::string name;
     std::string path;
     std::string instancePersistencePath;
+    std::string instanceId;
     // Per-module transport set, serialized as JSON (the format defined
     // by logos-cpp-sdk's logos_transport_config_json.h). Empty means
     // "use the global default (LocalSocket only)" — the back-compat

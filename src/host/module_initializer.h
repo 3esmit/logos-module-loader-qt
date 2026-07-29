@@ -14,6 +14,7 @@ LogosAPI* initializeLogosAPI(const std::string& moduleName, QObject* module,
                               PluginInterface* basePlugin, const std::string& authToken,
                               const std::string& modulePath,
                               const std::string& instancePersistencePath = {},
+                              const std::string& instanceId = {},
                               const std::string& transportSetJson = {});
 
 #endif // MODULE_INITIALIZER_H

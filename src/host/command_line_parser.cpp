@@ -15,6 +15,8 @@ ModuleArgs parseCommandLineArgs(int argc, char *argv[])
         ->required();
     app.add_option("--instance-persistence-path", result.instancePersistencePath,
         "Instance persistence directory for the module");
+    app.add_option("--instance-id", result.instanceId,
+        "Explicit runtime instance ID for the module");
     app.add_option("--transport-set", result.transportSetJson,
         "Per-module transport set as JSON (logos-cpp-sdk shape); empty = global default");
     app.add_option("--token-source", result.tokenSource,

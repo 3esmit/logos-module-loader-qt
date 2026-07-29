@@ -2,10 +2,12 @@
 
 add_executable(logos_module_loader_qt_tests
     test_qt_plugin_format_loader.cpp
+    test_module_instance_id.cpp
     test_token_source.cpp
     # token_source.cpp lives in the logos_host_qt executable (not a linkable
     # library), so compile its implementation directly into the test binary.
     ${CMAKE_SOURCE_DIR}/src/host/token_source.cpp
+    ${CMAKE_SOURCE_DIR}/src/host/command_line_parser.cpp
 )
 
 target_link_libraries(logos_module_loader_qt_tests PRIVATE
@@ -13,6 +15,7 @@ target_link_libraries(logos_module_loader_qt_tests PRIVATE
     GTest::gtest
     GTest::gtest_main
     spdlog::spdlog
+    CLI11::CLI11
 )
 
 target_include_directories(logos_module_loader_qt_tests PRIVATE
