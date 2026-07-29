@@ -77,6 +77,11 @@ std::vector<std::string> QtPluginFormatLoader::buildArguments(const LogosCore::M
         args.push_back(desc.instancePersistencePath);
     }
 
+    if (!desc.instanceId.empty()) {
+        args.push_back("--instance-id");
+        args.push_back(desc.instanceId);
+    }
+
     if (!desc.transportSetJson.empty()) {
         args.push_back("--transport-set");
         args.push_back(desc.transportSetJson);

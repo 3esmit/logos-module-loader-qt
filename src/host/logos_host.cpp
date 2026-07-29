@@ -227,6 +227,7 @@ int main(int argc, char *argv[])
     LogosAPI* logos_api = initializeLogosAPI(args.name, module.instance(),
                                              basePlugin, authToken, args.path,
                                              args.instancePersistencePath,
+                                             args.instanceId,
                                              args.transportSetJson);
     module.release();
 

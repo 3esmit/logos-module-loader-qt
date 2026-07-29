@@ -88,3 +88,20 @@ TEST_F(QtPluginFormatLoaderTest, BuildArguments_OmitsInstancePersistenceWhenEmpt
 
     EXPECT_EQ(args.size(), 4u);
 }
+
+TEST_F(QtPluginFormatLoaderTest, BuildArguments_IncludesExplicitRuntimeInstance) {
+    LogosCore::ModuleDescriptor desc;
+    desc.name = "test-module";
+    desc.path = "/path/to/module.so";
+    desc.instanceId = "zone_0101";
+
+    auto args = loader.buildArguments(desc);
+
+    ASSERT_EQ(args.size(), 6u);
+    EXPECT_EQ(args[0], "--name");
+    EXPECT_EQ(args[1], "test-module");
+    EXPECT_EQ(args[2], "--path");
+    EXPECT_EQ(args[3], "/path/to/module.so");
+    EXPECT_EQ(args[4], "--instance-id");
+    EXPECT_EQ(args[5], "zone_0101");
+}

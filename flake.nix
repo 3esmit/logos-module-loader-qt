@@ -6,12 +6,12 @@
     nixpkgs.follows = "logos-nix/nixpkgs";
     logos-cpp-sdk.url = "github:logos-co/logos-cpp-sdk";
     logos-cpp-sdk.inputs.logos-protocol.follows = "logos-protocol";
-    logos-protocol.url = "github:logos-co/logos-protocol";
-    logos-qt-sdk.url = "github:logos-co/logos-qt-sdk";
+    logos-protocol.url = "github:3esmit/logos-protocol";
+    logos-qt-sdk.url = "github:3esmit/logos-qt-sdk";
     logos-qt-sdk.inputs.logos-protocol.follows = "logos-protocol";
     logos-qt-sdk.inputs.logos-cpp-sdk.follows = "logos-cpp-sdk";
     logos-module.url = "github:logos-co/logos-module";
-    logos-container.url = "github:logos-co/logos-container";
+    logos-container.url = "github:3esmit/logos-container";
     logos-module-loader.url = "github:logos-co/logos-module-loader";
   };
 
