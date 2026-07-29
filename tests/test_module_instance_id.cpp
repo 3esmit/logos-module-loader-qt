@@ -11,11 +11,11 @@ TEST(ModuleInstanceIdTest, ExplicitIdTakesPrecedenceOverPersistencePath)
               "zone_0101");
 }
 
-TEST(ModuleInstanceIdTest, PersistencePathProvidesCompatibilityFallback)
+TEST(ModuleInstanceIdTest, PersistencePathDoesNotOverrideDefaultTransportIdentity)
 {
-    EXPECT_EQ(LogosCore::resolveRuntimeInstanceId(
-                  "", "/var/logos/instances/zone_0101/"),
-              "zone_0101");
+    EXPECT_TRUE(LogosCore::resolveRuntimeInstanceId(
+                    "", "/var/logos/instances/zone_0101/")
+                    .empty());
 }
 
 TEST(ModuleInstanceIdTest, MissingIdentityKeepsLegacyDefaultInstance)
