@@ -25,10 +25,12 @@ ModuleArgs parseCommandLineArgs(int argc, char *argv[])
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError& e) {
-        app.exit(e);
+        result.shouldExit = true;
+        result.exitCode = app.exit(e);
         return result;
     }
 
     result.valid = true;
+    result.exitCode = 0;
     return result;
 }

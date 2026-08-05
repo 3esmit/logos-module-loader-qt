@@ -4,6 +4,7 @@ add_executable(logos_module_loader_qt_tests
     test_qt_plugin_format_loader.cpp
     test_module_instance_id.cpp
     test_token_source.cpp
+    test_command_line_parser.cpp
     # token_source.cpp lives in the logos_host_qt executable (not a linkable
     # library), so compile its implementation directly into the test binary.
     ${CMAKE_SOURCE_DIR}/src/host/token_source.cpp

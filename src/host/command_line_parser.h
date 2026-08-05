@@ -18,6 +18,11 @@ struct ModuleArgs {
     // container uses. A different container could pass "fd:<n>" or
     // "file:<path>". The host stays agnostic to which container it runs under.
     std::string tokenSource;
+    // CLI11 handles informational and malformed command lines by printing a
+    // response and returning an exit code. The host must propagate that code
+    // instead of attempting module startup with incomplete arguments.
+    bool shouldExit = false;
+    int exitCode = 1;
     bool valid;
 };
 
