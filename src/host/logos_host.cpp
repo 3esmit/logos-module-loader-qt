@@ -191,6 +191,9 @@ int main(int argc, char *argv[])
 #endif
 
     ModuleArgs args = parseCommandLineArgs(argc, argv);
+    if (args.shouldExit) {
+        return args.exitCode;
+    }
     if (!args.valid) {
         return 1;
     }
