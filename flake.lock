@@ -329,11 +329,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785216086,
-        "narHash": "sha256-Q4eZYap47ACMKCnLBJNlSxGw5VILK44vLWD8A5tZpXA=",
+        "lastModified": 1786220329,
+        "narHash": "sha256-bl6QxEGdy6KUxCHhctviWiD97HN7QUw5tpVdwRWFSP4=",
         "owner": "3esmit",
         "repo": "logos-protocol",
-        "rev": "0012508a2f77a85c8b498232af47c7a4d1ed4d28",
+        "rev": "6086c922bf27ea53e073e92c997421c6e91baacd",
         "type": "github"
       },
       "original": {
