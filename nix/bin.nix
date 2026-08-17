@@ -5,6 +5,10 @@
 
 pkgs.stdenvNoCC.mkDerivation {
   pname = "${common.pname}-bin";
+  # qtbase\'s setup hook errors in qtPreHook unless a wrapper hook ran or
+  # this is set; the wrapper hooks are absent on Windows (they cannot even
+  # evaluate for a mingw host) and would skip a PE anyway.
+  dontWrapQtApps = true;
   version = common.version;
 
   dontUnpack = true;
@@ -33,9 +37,14 @@ pkgs.stdenvNoCC.mkDerivation {
 
     # logos_host -> logos_host_qt compatibility symlink (the CMake install adds
     # one too, but bin.nix copies only the build/ tree, so recreate it here).
-    if [ -e $out/bin/logos_host_qt ] && [ ! -e $out/bin/logos_host ]; then
-      ln -s logos_host_qt $out/bin/logos_host
-    fi
+    # The executable carries .exe when cross-compiling to Windows; linking to
+    # the bare name would leave a dangling symlink that noBrokenSymlinks
+    # rejects.
+    for ext in "" ".exe"; do
+      if [ -e "$out/bin/logos_host_qt$ext" ] && [ ! -e "$out/bin/logos_host$ext" ]; then
+        ln -s "logos_host_qt$ext" "$out/bin/logos_host$ext"
+      fi
+    done
 
     runHook postInstall
   '';
