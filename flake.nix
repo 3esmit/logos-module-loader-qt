@@ -4,10 +4,10 @@
   inputs = {
     logos-nix.url = "github:logos-co/logos-nix";
     nixpkgs.follows = "logos-nix/nixpkgs";
-    logos-cpp-sdk.url = "github:3esmit/logos-cpp-sdk";
+    logos-cpp-sdk.url = "github:3esmit/logos-cpp-sdk?rev=790030b442f3fc210f973fb2b8807e3495ee9724";
     logos-cpp-sdk.inputs.logos-protocol.follows = "logos-protocol";
-    logos-protocol.url = "github:3esmit/logos-protocol";
-    logos-qt-sdk.url = "github:3esmit/logos-qt-sdk";
+    logos-protocol.url = "github:3esmit/logos-protocol?rev=dbd1df94caeb3e073c330fc3d95988ce1086b1a5";
+    logos-qt-sdk.url = "github:3esmit/logos-qt-sdk?rev=49cc49450de1db0168b687b52422beeefd55761c";
     logos-qt-sdk.inputs.logos-protocol.follows = "logos-protocol";
     logos-qt-sdk.inputs.logos-cpp-sdk.follows = "logos-cpp-sdk";
     logos-module.url = "github:logos-co/logos-module";
@@ -28,9 +28,27 @@
         logosContainer = logos-container.packages.${system}.default;
         logosModuleLoader = logos-module-loader.packages.${system}.default;
       });
+
+      # Same, plus "x86_64-windows". Every dependency here is a TARGET-side
+      # library (headers/archives compiled into this one), so they all follow
+      # ${system}; there is no build-time code generator to keep native.
+      forAllTargets = f:
+        nixpkgs.lib.genAttrs (systems ++ [ "x86_64-windows" ]) (system: f {
+          inherit system;
+          pkgs =
+            if system == "x86_64-windows"
+            then logos-nix.lib.mkWindowsPkgs { buildSystem = "x86_64-linux"; }
+            else import nixpkgs { inherit system; };
+          logosSdk = logos-cpp-sdk.packages.${system}.default;
+          logosProtocolPkg = logos-protocol.packages.${system}.default;
+          logosQtSdk = logos-qt-sdk.packages.${system}.default;
+          logosModule = logos-module.packages.${system}.default;
+          logosContainer = logos-container.packages.${system}.default;
+          logosModuleLoader = logos-module-loader.packages.${system}.default;
+        });
     in
     {
-      packages = forAllSystems ({ pkgs, system, logosSdk, logosProtocolPkg, logosQtSdk, logosModule, logosContainer, logosModuleLoader }:
+      packages = forAllTargets ({ pkgs, system, logosSdk, logosProtocolPkg, logosQtSdk, logosModule, logosContainer, logosModuleLoader, ... }:
         let
           common = import ./nix/default.nix {
             inherit pkgs logosSdk logosProtocolPkg logosQtSdk logosModule logosContainer logosModuleLoader;
