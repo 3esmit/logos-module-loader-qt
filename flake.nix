@@ -4,7 +4,7 @@
   inputs = {
     logos-nix.url = "github:logos-co/logos-nix";
     nixpkgs.follows = "logos-nix/nixpkgs";
-    logos-cpp-sdk.url = "github:logos-co/logos-cpp-sdk";
+    logos-cpp-sdk.url = "github:3esmit/logos-cpp-sdk";
     logos-cpp-sdk.inputs.logos-protocol.follows = "logos-protocol";
     logos-protocol.url = "github:3esmit/logos-protocol";
     logos-qt-sdk.url = "github:3esmit/logos-qt-sdk";
